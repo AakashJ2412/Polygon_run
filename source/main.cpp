@@ -1,6 +1,6 @@
 #include "main.h"
 #include "timer.h"
-#include "ball.h"
+#include "poly.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
-Ball ball1;
+Poly1 poly1;
 
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
@@ -51,7 +51,7 @@ void draw() {
     glm::mat4 MVP;  // MVP = Projection * View * Model
 
     // Scene render
-    ball1.draw(VP);
+    poly1.draw(VP);
 }
 
 void tick_input(GLFWwindow *window) {
@@ -63,7 +63,7 @@ void tick_input(GLFWwindow *window) {
 }
 
 void tick_elements() {
-    ball1.tick();
+    poly1.tick();
     camera_rotation_angle += 1;
 }
 
@@ -73,7 +73,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    ball1       = Ball(0, 0, COLOR_RED);
+    poly1       = Poly1(0, 0, COLOR_RED);
 
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("../source/shaders/shader.vert", "../source/shaders/shader.frag");
