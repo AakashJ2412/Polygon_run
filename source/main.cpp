@@ -128,24 +128,27 @@ void tick_input(GLFWwindow *window)
     {
         if (polybit == 1)
         {
-            float r = sqrt((poly1.position.x - cameraPos.x) * (poly1.position.x - cameraPos.x) + (poly1.position.y - cameraPos.y) * (poly1.position.y - cameraPos.y) + (poly1.position.z - cameraPos.z) * (poly1.position.z - cameraPos.z));
-            float xval, zval;
-            if (poly1.position.x <= cameraPos.x)
-                zval = -cameraSpeed*r;
-            else
-                zval = cameraSpeed*r;
-            if (poly1.position.z <= cameraPos.z)
-                xval = -cameraSpeed*r;
-            else
-                xval = cameraSpeed*r;
-            cameraPos += glm::vec3(xval, 0.0f, zval);
+            float r = sqrt((poly1.position.x - cameraPos.x) * (poly1.position.x - cameraPos.x) + (poly1.position.z - cameraPos.z) * (poly1.position.z - cameraPos.z));
+            float xval = sin(glfwGetTime()) * r;
+            float zval = cos(glfwGetTime()) * r;
+            cameraPos = glm::vec3(xval, 0.0f, zval);
             cameraFront = glm::vec3(poly1.position.x - cameraPos.x, poly1.position.y - cameraPos.y, poly1.position.z - cameraPos.z);
         }
         else if (polybit == 2)
         {
+            float r = sqrt((poly2.position.x - cameraPos.x) * (poly2.position.x - cameraPos.x) + (poly2.position.z - cameraPos.z) * (poly2.position.z - cameraPos.z));
+            float xval = sin(glfwGetTime()) * r;
+            float zval = cos(glfwGetTime()) * r;
+            cameraPos = glm::vec3(xval, 0.0f, zval);
+            cameraFront = glm::vec3(poly2.position.x - cameraPos.x, poly2.position.y - cameraPos.y, poly2.position.z - cameraPos.z);
         }
         else if (polybit == 3)
         {
+            float r = sqrt((poly3.position.x - cameraPos.x) * (poly3.position.x - cameraPos.x) + (poly3.position.z - cameraPos.z) * (poly3.position.z - cameraPos.z));
+            float xval = sin(glfwGetTime()) * r;
+            float zval = cos(glfwGetTime()) * r;
+            cameraPos = glm::vec3(xval, 0.0f, zval);
+            cameraFront = glm::vec3(poly3.position.x - cameraPos.x, poly3.position.y - cameraPos.y, poly3.position.z - cameraPos.z);
         }
     }
     if (k1)
