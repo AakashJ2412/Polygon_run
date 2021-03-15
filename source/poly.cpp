@@ -4,8 +4,8 @@
 //First polygon
 
 
-Poly1::Poly1(float x, float y, color_t color) {
-    this->position = glm::vec3(x, y, 0);
+Poly1::Poly1(float x, float y, float z,color_t color) {
+    this->position = glm::vec3(x, y, z);
     this->rotation = 0;
     speed = 1;
     // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
@@ -49,7 +49,7 @@ Poly1::Poly1(float x, float y, color_t color) {
         1.0f,-1.0f, 1.0f
     };
 
-    this->object = create3DObject(GL_TRIANGLES, 12*3, vertex_buffer_data, color, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 12*3, vertex_buffer_data, color,GL_FILL);
 }
 
 void Poly1::draw(glm::mat4 VP) {
@@ -64,8 +64,8 @@ void Poly1::draw(glm::mat4 VP) {
     draw3DObject(this->object);
 }
 
-void Poly1::set_position(float x, float y) {
-    this->position = glm::vec3(x, y, 0);
+void Poly1::set_position(float x, float y, float z) {
+    this->position = glm::vec3(x, y, z);
 }
 
 void Poly1::tick() {
@@ -76,8 +76,8 @@ void Poly1::tick() {
 
 // Second polynomial
 
-Poly2::Poly2(float x, float y, color_t color) {
-    this->position = glm::vec3(x, y, 0);
+Poly2::Poly2(float x, float y, float z, color_t color) {
+    this->position = glm::vec3(x, y, z);
     this->rotation = 0;
     speed = 1;
     // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
@@ -136,8 +136,8 @@ void Poly2::draw(glm::mat4 VP) {
     draw3DObject(this->object);
 }
 
-void Poly2::set_position(float x, float y) {
-    this->position = glm::vec3(x, y, 0);
+void Poly2::set_position(float x, float y, float z) {
+    this->position = glm::vec3(x, y, z);
 }
 
 void Poly2::tick() {
@@ -148,8 +148,8 @@ void Poly2::tick() {
 
 // Third Polynomial
 
-Poly3::Poly3(float x, float y, color_t color) {
-    this->position = glm::vec3(x, y, 0);
+Poly3::Poly3(float x, float y, float z, color_t color) {
+    this->position = glm::vec3(x, y, z);
     this->rotation = 0;
     speed = 1;
     // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
@@ -208,8 +208,8 @@ void Poly3::draw(glm::mat4 VP) {
     draw3DObject(this->object);
 }
 
-void Poly3::set_position(float x, float y) {
-    this->position = glm::vec3(x, y, 0);
+void Poly3::set_position(float x, float y, float z) {
+    this->position = glm::vec3(x, y, z);
 }
 
 void Poly3::tick() {

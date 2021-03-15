@@ -41,6 +41,10 @@ void error_callback(int error, const char *description);
 void quit(GLFWwindow *window);
 void reshapeWindow(GLFWwindow *window, int width, int height);
 
+// move object
+void move_object(char dim);
+
+
 // Types
 struct VAO {
     GLuint VertexArrayID;
