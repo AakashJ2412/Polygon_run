@@ -12,10 +12,13 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
+// 3 Polygon objects that vary depending user input, which sets polybit
 Poly1 poly1;
 Poly2 poly2;
 Poly3 poly3;
 int polybit;
+
+// vectors determining the camera position and parameters.
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -28,35 +31,23 @@ float camera_rotation_angle = 0;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
-/* Edit this function according to your assignment */
+
 void draw()
 {
     // clear the color and depth in the frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // use the loaded shader program
-    // Don't change unless you know what you are doing
     glUseProgram(programID);
 
-    // Eye - Location of camera. Don't change unless you are sure!!
-    // glm::vec3 eye(5 * cos(camera_rotation_angle * M_PI / 180.0f), 0, 5 * sin(camera_rotation_angle * M_PI / 180.0f));
-    // Target - Where is the camera looking at.  Don't change unless you are sure!!
-    // glm::vec3 target(0, 0, 0);
-    // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
-    // glm::vec3 up(0, 1, 0);
-
-    // Compute Camera matrix (view)
-    //Matrices.view = glm::lookAt(eye, target, up); // Rotating Camera for 3D
-    // Don't change unless you are sure!!
-    Matrices.view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp); // Fixed camera for 2D (ortho) in XY plane
+    // set camera view using lookAt() function, on the basis of current position, front, and up vectors
+    Matrices.view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp); 
 
     // Compute ViewProject matrix as view/camera might not be changed for this frame (basic scenario)
-    // Don't change unless you are sure!!
     glm::mat4 VP = Matrices.projection * Matrices.view;
 
     // Send our transformation to the currently bound shader, in the "MVP" uniform
     // For each model you render, since the MVP will be different (at least the M part)
-    // Don't change unless you are sure!!
     glm::mat4 MVP; // MVP = Projection * View * Model
 
     // Scene render
@@ -70,17 +61,18 @@ void draw()
 
 void tick_elements()
 {
+    // function to rotate object
     if (polybit == 1)
         poly1.tick();
     else if (polybit == 2)
         poly2.tick();
     else if (polybit == 3)
         poly3.tick();
-    //camera_rotation_angle += 1;
 }
 
 void tick_input(GLFWwindow *window)
 {
+    // capture all key inputs and do the necessary actions as per key binds
     int left = glfwGetKey(window, GLFW_KEY_LEFT);
     int right = glfwGetKey(window, GLFW_KEY_RIGHT);
     int up = glfwGetKey(window, GLFW_KEY_UP);
@@ -112,6 +104,7 @@ void tick_input(GLFWwindow *window)
         move_object('B');
     if (r)
         tick_elements();
+    // update camera position depending on front, up, or right vector(calculated as cross of front and up)
     if (f)
         cameraPos += cameraSpeed * cameraFront;
     if (c)
@@ -126,31 +119,33 @@ void tick_input(GLFWwindow *window)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (t)
     {
+        // Rotate camera around object. This is done by finding the radius, creating an offset vector along x and z axis, and computing their value depending on current position, and updating cameraPos and Front
         if (polybit == 1)
         {
-            float r = sqrt((poly1.position.x - cameraPos.x) * (poly1.position.x - cameraPos.x) + (poly1.position.z - cameraPos.z) * (poly1.position.z - cameraPos.z));
-            float xval = sin(glfwGetTime()) * r;
-            float zval = cos(glfwGetTime()) * r;
-            cameraPos = glm::vec3(xval, 0.0f, zval);
+            float r = sqrt((poly1.position.x - cameraPos.x) * (poly1.position.x - cameraPos.x) + (poly1.position.y - cameraPos.y) * (poly1.position.y - cameraPos.y) + (poly1.position.z - cameraPos.z) * (poly1.position.z - cameraPos.z));
+            glm::vec3 xval = glm::normalize(glm::cross(cameraFront, cameraUp)) * sin(cameraSpeed) * r;
+            glm::vec3 zval = glm::normalize(cameraFront) *r*(1 - cos(cameraSpeed));
+            cameraPos += xval + zval;
             cameraFront = glm::vec3(poly1.position.x - cameraPos.x, poly1.position.y - cameraPos.y, poly1.position.z - cameraPos.z);
         }
         else if (polybit == 2)
         {
-            float r = sqrt((poly2.position.x - cameraPos.x) * (poly2.position.x - cameraPos.x) + (poly2.position.z - cameraPos.z) * (poly2.position.z - cameraPos.z));
-            float xval = sin(glfwGetTime()) * r;
-            float zval = cos(glfwGetTime()) * r;
-            cameraPos = glm::vec3(xval, 0.0f, zval);
+            float r = sqrt((poly2.position.x - cameraPos.x) * (poly2.position.x - cameraPos.x) + (poly2.position.y - cameraPos.y) * (poly2.position.y - cameraPos.y) + (poly2.position.z - cameraPos.z) * (poly2.position.z - cameraPos.z));
+            glm::vec3 xval = glm::normalize(glm::cross(cameraFront, cameraUp)) * sin(cameraSpeed) * r;
+            glm::vec3 zval = glm::normalize(cameraFront) *r*(1 - cos(cameraSpeed));
+            cameraPos += xval + zval;
             cameraFront = glm::vec3(poly2.position.x - cameraPos.x, poly2.position.y - cameraPos.y, poly2.position.z - cameraPos.z);
         }
         else if (polybit == 3)
         {
-            float r = sqrt((poly3.position.x - cameraPos.x) * (poly3.position.x - cameraPos.x) + (poly3.position.z - cameraPos.z) * (poly3.position.z - cameraPos.z));
-            float xval = sin(glfwGetTime()) * r;
-            float zval = cos(glfwGetTime()) * r;
-            cameraPos = glm::vec3(xval, 0.0f, zval);
+            float r = sqrt((poly3.position.x - cameraPos.x) * (poly3.position.x - cameraPos.x) + (poly3.position.y - cameraPos.y) * (poly3.position.y - cameraPos.y) + (poly3.position.z - cameraPos.z) * (poly3.position.z - cameraPos.z));
+            glm::vec3 xval = glm::normalize(glm::cross(cameraFront, cameraUp)) * sin(cameraSpeed) * r;
+            glm::vec3 zval = glm::normalize(cameraFront) *r*(1 - cos(cameraSpeed));
+            cameraPos += xval + zval;
             cameraFront = glm::vec3(poly3.position.x - cameraPos.x, poly3.position.y - cameraPos.y, poly3.position.z - cameraPos.z);
         }
     }
+    // Set camera position to static positions, and make camera face the object
     if (k1)
     {
         if (polybit == 1)
@@ -216,8 +211,10 @@ void tick_input(GLFWwindow *window)
     }
 }
 
+
 void move_object(char dim)
 {
+    // function that facilitates translation of object
     if (polybit == 1)
     {
         switch (dim)
@@ -292,12 +289,10 @@ void move_object(char dim)
     }
 }
 
-/* Initialize the OpenGL rendering properties */
-/* Add all the models to be created here */
+// Initialize the OpenGL rendering properties
 void initGL(GLFWwindow *window, int width, int height)
 {
-    /* Objects should be created before any other gl function and shaders */
-    // Create the models
+    // Creating the necessary model
     if (polybit == 1)
         poly1 = Poly1(0, 0, 0, COLOR_RED);
     else if (polybit == 2)
@@ -327,6 +322,7 @@ void initGL(GLFWwindow *window, int width, int height)
 
 int main(int argc, char **argv)
 {
+    // check if input argument to file is valid and set polybit appropriately
     if (argc != 2)
     {
         cout << "Error: Invalid number of arguments\n";
@@ -371,14 +367,12 @@ int main(int argc, char **argv)
             // Swap Frame Buffer in double buffering
             glfwSwapBuffers(window);
 
-            //tick_elements();
             tick_input(window);
         }
 
         // Poll for Keyboard and mouse events
         glfwPollEvents();
     }
-
     quit(window);
 }
 
