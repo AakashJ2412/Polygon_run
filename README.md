@@ -1,7 +1,6 @@
 # Polygon_run
-## Computer Graphics Assignment-0
 
-This assignment involves making 3 dodecahedrons, and adding basic camera and object functionalities to them. This includes translation and rotational motion for both camera and object.
+This project involves making 3 dodecahedrons, and adding basic camera and object functionalities to them. This includes translation and rotational motion for both camera and object. It is a good introduction to computer graphics.
 
 #### Installation
 
